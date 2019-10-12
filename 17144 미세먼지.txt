@@ -1,0 +1,56 @@
+import sys
+import copy
+input = sys.stdin.readline
+
+def refresh():
+    for i in range(airpos[0]-1,-1,-1):
+        poslist[i][0] = poslist[i-1][0]
+    for i in range(c-1):
+        poslist[0][i]=poslist[0][i+1]
+    for i in range(airpos[0]):
+        poslist[i][c-1]=poslist[i+1][c-1]
+    for i in range(c-1,1,-1):
+        poslist[airpos[0]][i]=poslist[airpos[0]][i-1]
+    poslist[airpos[0]][1]=0
+    for i in range(airpos[1]+1,r-1,1):
+        poslist[i][0]=poslist[i+1][0]
+    for i in range(c-1):
+        poslist[r-1][i]=poslist[r-1][i+1]
+    for i in range(r-1,airpos[1],-1):
+        poslist[i][c-1]=poslist[i-1][c-1]
+    for i in range(c-1,1,-1):
+        poslist[airpos[1]][i]=poslist[airpos[1]][i-1]
+    poslist[airpos[1]][1]=0
+
+
+def movedust():
+    temlist=[[0 for i in range(c)] for j in range(r)]
+    for i in range(r):
+        for j in range(c):
+            if poslist[i][j] >=5:
+                spread = poslist[i][j]//5
+                for dx, dy in (-1,0),(1,0),(0,1),(0,-1):
+                    nx , ny = i  +dx , j+dy
+                    if 0 <= nx <r and 0 <=ny <c and poslist[nx][ny] != -1:
+                        temlist[nx][ny] +=spread
+                        poslist[i][j] -= spread
+    for i in range(r):
+        for j in range(c):
+            poslist[i][j] +=temlist[i][j]
+
+if __name__ == "__main__":
+    r,c,t = map(int,input().split())
+    poslist=[]
+    airpos=[]
+    poslist = [list(map(int, input().split())) for _ in range(r)]
+    dustlist = []
+    for i in range(r):  # 전체돌면서 먼지 좌표 모으고 청정기 위치 파악
+        for j in range(c):
+            if poslist[i][j] == -1:
+                airpos.append(i)               #청정기 위치 끝
+
+    for q in range(t):                       #시간만큼 돌리기                                                  #청정기 돌릴때 참고
+        movedust()
+        refresh()
+    #print(poslist)
+    print(sum(map(sum, poslist))+2)

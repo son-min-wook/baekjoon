@@ -1,0 +1,71 @@
+import sys
+import copy
+input = sys.stdin.readline
+
+def spreadvirus(_viruslist,c_arr):
+    dx = [-1,1,0,0]
+    dy = [0,0,-1,1]
+    spread_virus_count = 0
+    global safe_area
+
+    while _viruslist:
+        x,y =_viruslist.pop()
+        #print(x,y)
+        #fsdfsdf=input()
+        for i in range(4):
+            nx=x+dx[i]
+            ny=y+dy[i]
+
+            if 0<=nx and 0<=ny and nx<n and ny <m:
+                if c_arr[nx][ny] ==0:
+                    c_arr[nx][ny] =2
+                    spread_virus_count+=1
+                    _viruslist.append([nx,ny])
+    #print(c_arr)
+    return safe_area - spread_virus_count -3
+
+def setwall(start,wallcount):
+    global maxval
+    global n
+    global m
+
+    if wallcount ==0:
+        copy_arr = copy.deepcopy(arr)
+        copy_viruslist  = copy.deepcopy(viruslist)
+        scount=spreadvirus(copy_viruslist,copy_arr)
+        maxval = max(scount,maxval)
+        return
+
+    for i in range(start , n*m):
+        x= i //m
+        y=i%m
+        #print(i,x,y)
+        #aa=input()
+        if arr[x][y] ==0:
+            arr[x][y] = 1
+            setwall(i+1,wallcount-1)
+            arr[x][y]=0
+            #sdsd=input()
+
+
+
+if __name__== "__main__":
+    n,m = map(int,input().split())
+    poslist=[]
+    viruslist=[]
+    arr=[]
+    maxval=0
+    safe_area=0
+
+    for i in range(n):
+        arr.append(list(map(int,input().split())))
+
+    for i in range(n):
+        for j in range(m):
+            if(arr[i][j] ==2):
+                viruslist.append([i,j])
+            elif(arr[i][j]==0):
+                safe_area +=1
+
+    setwall(0,3)
+    print(maxval)
