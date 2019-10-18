@@ -1,0 +1,57 @@
+r,c,m = map(int,input().split())
+table =[[[0,0,0] for _ in range(c)] for _ in range(r)]
+dx=[0,0,1,-1]
+dy=[-1,1,0,0]
+total=0
+if(m==0):
+    total=0
+else:
+    for i in range(m):
+        x,y,s,d,z= map(int,input().split())
+        table[x-1][y-1]=[s,d-1,z]
+    for i in range(c):
+        temp=[[[0,0,0] for _ in range(c)] for _ in range(r)]
+        move=[]
+        for j in range(r):
+            _,_,get = table[j][i]
+            if get:
+                total+=get
+                table[j][i]=[0,0,0]
+                break
+        for j in range(r):
+            for k in range(c):
+                s,d,z = table[j][k]
+                if z:     #다른건 0일 수 있음
+                    if d<2:
+                        ns,nd,nj = s %((r-1)*2),d,j
+                        for l in range(ns):
+                            if(nj ==0 and nd ==0 ):
+                                nd=1
+                            elif(nj ==r-1 and nd==1):
+                                nd=0
+                            nj +=dy[nd]
+                        _,_,zz=temp[nj][k]
+                        if(zz<z):
+                            temp[nj][k] = [s, nd, z]
+                            move.append([nj,k])
+                    else:
+                        ns, nd, nk = s % ((c - 1) * 2), d, k
+                        for l in range(ns):
+                            if (nk == 0 and nd == 3):
+                                nd = 2
+                            elif (nk == c - 1 and nd == 2):
+                                nd = 3
+                            nk += dx[nd]
+                        _, _, zz = temp[j][nk]
+                        if (zz < z):
+                            temp[j][nk] = [s, nd, z]
+                            move.append([j,nk])
+                    table[j][k] = [0, 0, 0]
+        for qw in range(len(move)):
+            table[move[qw][0]][move[qw][1]]=temp[move[qw][0]][move[qw][1]]
+print(total)
+
+
+
+
+
