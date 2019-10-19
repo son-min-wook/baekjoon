@@ -1,0 +1,19 @@
+import sys
+input= sys.stdin.readline
+ans=0
+
+def solve(day,profit):
+    global ans
+    if(day==n+1):
+        ans=max(ans,profit)
+        return
+    if(day>n+1):
+        return
+    solve(day+t[day],profit+p[day])
+    solve(day+1,profit)
+n=int(input())
+t,p=[0]*(n+1),[0]*(n+1)
+for i in range(n):
+    t[i+1],p[i+1]=map(int,input().split())
+solve(1,0)
+print(ans)
